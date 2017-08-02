@@ -1,6 +1,6 @@
 ---
 jobs:
-- name: job-deploy
+- name: deploy-redis
   public: true
   serial: true
   plan:
