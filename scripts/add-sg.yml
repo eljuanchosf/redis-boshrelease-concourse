@@ -1,0 +1,3 @@
+- type: replace
+  path: /networks/name=private/subnets/az=z1/cloud_properties/security_groups/-
+  value: ((concourse_sg))

@@ -1,0 +1,69 @@
+---
+jobs:
+- name: job-deploy
+  public: true
+  serial: true
+  plan:
+  - aggregate:
+    - get: resource-bosh-stemcell
+    - get: resource-bosh-release-redis
+    - get: resource-manifest
+  
+  - task: update-cloud-config
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source: {repository: amuessig/concourse-bosh}
+      params:
+        BOSH_ENVIRONMENT: {{bosh-director}}
+        BOSH_CA_CERT: {{bosh-cert}}
+        BOSH_CLIENT: {{bosh-username}}
+        BOSH_CLIENT_SECRET: {{bosh-password}}
+        CLOUD_CONFIG: ./cloud-config.yml
+      run:
+        path: sh
+        args: 
+        - -exc
+        - |
+          bosh -n cloud-config > $CLOUD_CONFIG
+          bosh -n update-cloud-config $CLOUD_CONFIG --ops-file $MANIFESTS/add-sg.yml -v redis_sg={{redis-sg}}
+
+  - put: resource-redis-bosh-deployment
+    params:
+      manifest: resource-manifest/manifest.yml
+      releases:
+        - resource-bosh-release-redis/*.tgz
+      stemcells:
+        - resource-bosh-stemcell/*.tgz
+
+resources:
+- name: resource-manifest
+  type: git
+  source:
+    uri: https://gist.github.com/mkb/30c002a6ed185ed1bb100edbfa8b8ac9
+
+- name: resource-bosh-stemcell
+  type: bosh-io-stemcell
+  source:
+    name: {{bosh-stemcell-name}}
+
+- name: resource-bosh-release-redis
+  type: bosh-io-release
+  source:
+    repository: cloudfoundry-community/redis-boshrelease
+
+- name: resource-redis-bosh-deployment
+  type: bosh-deployment
+  source:
+    target: {{bosh-director}}
+    client: {{bosh-username}}
+    client_secret: {{bosh-password}}
+    ca_cert: {{bosh-cert}}
+    deployment: {{redis-deployment-name}} 
+
+resource_types:
+- name: bosh-deployment
+  type: docker-image
+  source:
+    repository: cloudfoundry/bosh-deployment-resource
