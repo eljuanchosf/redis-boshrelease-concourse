@@ -7,8 +7,7 @@ jobs:
   - aggregate:
     - get: resource-bosh-stemcell
     - get: resource-bosh-release-redis
-    - get: resource-manifest
-    - get: redis-boshrelease-concourse 
+    - get: redis-concourse 
   - task: update-cloud-config
     config:
       platform: linux
@@ -21,24 +20,26 @@ jobs:
         BOSH_CLIENT: {{bosh-username}}
         BOSH_CLIENT_SECRET: {{bosh-password}}
         CLOUD_CONFIG: ./cloud-config.yml
+      inputs:
+        - name: redis-concourse
       run:
         path: sh
         args: 
         - -exc
         - |
           bosh -n cloud-config > $CLOUD_CONFIG
-          bosh -n update-cloud-config $CLOUD_CONFIG --ops-file redis-boshrelease-concourse/add-sg.yml -v redis_sg={{redis-sg}}
+          bosh -n update-cloud-config $CLOUD_CONFIG --ops-file redis-concourse/add-sg.yml -v redis_sg={{redis-sg}}
 
   - put: resource-redis-bosh-deployment
     params:
-      manifest: redis-boshrelease-concourse/manifest.yml
+      manifest: redis-concourse/manifest.yml
       releases:
         - resource-bosh-release-redis/*.tgz
       stemcells:
         - resource-bosh-stemcell/*.tgz
 
 resources:
-- name: redis-boshrelease-concourse
+- name: redis-concourse
   type: git
   source: 
     uri: https://github.com/eljuanchosf/redis-boshrelease-concourse
