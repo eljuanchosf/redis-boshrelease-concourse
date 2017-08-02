@@ -39,7 +39,7 @@ update:
 stemcells:
 - alias: default
   name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent 
-  version: 3431.10
+  version: "3431.10"
 
 releases:
 - name: redis
