@@ -49,6 +49,7 @@ resources:
   type: bosh-io-stemcell
   source:
     name: {{bosh-stemcell-name}}
+    version_family: {{bosh-stemcell-version}}
 
 - name: resource-bosh-release-redis
   type: bosh-io-release

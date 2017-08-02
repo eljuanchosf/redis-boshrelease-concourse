@@ -39,7 +39,7 @@ update:
 stemcells:
 - alias: default
   os: ubuntu-trusty
-  version: latest
+  version: 3431.10
 
 releases:
 - name: redis
