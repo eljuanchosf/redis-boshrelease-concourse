@@ -1,13 +1,10 @@
 ---
 jobs:
-- name: deploy-redis
+- name: prepare-deployment
   public: true
   serial: true
   plan:
-  - aggregate:
-    - get: resource-bosh-stemcell
-    - get: resource-bosh-release-redis
-    - get: redis-concourse 
+  - get: redis-concourse 
   - task: update-cloud-config
     config:
       platform: linux
@@ -29,7 +26,16 @@ jobs:
         - |
           bosh -n cloud-config > $CLOUD_CONFIG
           bosh -n update-cloud-config $CLOUD_CONFIG --ops-file redis-concourse/add-sg.yml -v redis_sg={{redis-sg}}
-
+- name: deploy-redis
+  public: true
+  serial: true
+  plan:
+  - aggregate:
+    - get: resource-bosh-stemcell
+    - get: resource-bosh-release-redis
+  - get: redis-concourse
+    passed: [prepare-deployment]
+    trigger: true
   - put: resource-redis-bosh-deployment
     params:
       manifest: redis-concourse/manifest.yml
