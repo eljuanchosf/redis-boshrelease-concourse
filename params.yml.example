@@ -1,3 +1,4 @@
 bosh-stemcell-name: bosh-warden-boshlite-ubuntu-trusty-go_agent
-redis-sg: your-redis-security-group-ID 
-redis-deployment-name: your-redis-deployment-name # get it from your deployment manifest
+bosh-stemcell-version: 3431.10
+redis-sg: your-redis-security-group-ID
+redis-deployment-name: set-your-redis-deployment-name

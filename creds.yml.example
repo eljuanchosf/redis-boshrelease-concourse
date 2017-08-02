@@ -1,7 +1,7 @@
 bosh-director: bosh-director-url
-bosh-username: bosh-director-username
-bosh-password: bosh-director-password
-bosh-stemcell-name: bosh-warden-boshlite-ubuntu-trusty-go_agent
+bosh-username: bosh-director-username-usually-admin
+bosh-password: make-your-bosh-director-password
 bosh-cert: |+
   -----BEGIN CERTIFICATE-----
   -----END CERTIFICATE-----
+redis-password: make-your-redis-server-password
