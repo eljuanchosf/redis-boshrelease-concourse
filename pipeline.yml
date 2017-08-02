@@ -43,6 +43,11 @@ jobs:
         - resource-bosh-release-redis/*.tgz
       stemcells:
         - resource-bosh-stemcell/*.tgz
+      vars:
+        redis-deployment-name: {{redis-deployment-name}}
+        bosh-stemcell-name: {{bosh-stemcell-name}}
+        bosh-stemcell-version: {{bosh-stemcell-version}}
+        redis-password: {{redis-password}}
 
 resources:
 - name: redis-concourse

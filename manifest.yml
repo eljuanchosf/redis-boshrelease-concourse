@@ -1,4 +1,4 @@
-name: redis
+name: ((redis-deployment-name))
 
 instance_groups:
 - name: redis
@@ -25,10 +25,6 @@ instance_groups:
   - name: sanity-tests
     release: redis
 
-variables:
-- name: redis-password
-  type: password
-
 update:
   canaries: 0
   max_in_flight: 1
@@ -38,8 +34,8 @@ update:
 
 stemcells:
 - alias: default
-  name: bosh-aws-xen-hvm-ubuntu-trusty-go_agent 
-  version: "3431.10"
+  name: ((bosh-stemcell-name))
+  version: ((bosh-stemcell-version))
 
 releases:
 - name: redis
